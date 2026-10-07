@@ -9,6 +9,7 @@ import {
   getPagination,
   buildMeta,
 } from "../utils/queryHelpers.js";
+import Driver from "../models/Driver.js";
 
 const INFO_FIELDS = [
   "vehicleNumber",
@@ -57,6 +58,31 @@ const SORTS = {
   investment: { totalInvestment: -1 },
 };
 
+const DRIVER_SELECT = "name phone status";
+
+// Sets/clears the driver, making sure he isn't already on another truck
+async function setDriver(vehicle, driverId) {
+  if (!driverId) {
+    vehicle.driver = null;
+    return;
+  }
+  const driver = await Driver.findOne({ _id: driverId, isDeleted: false });
+  if (!driver) throw new ApiError(404, "Driver not found");
+
+  const other = await Vehicle.findOne({
+    driver: driverId,
+    isDeleted: false,
+    _id: { $ne: vehicle._id },
+  }).select("vehicleNumber");
+  if (other)
+    throw new ApiError(
+      409,
+      `${driver.name} is already assigned to Truck #${other.vehicleNumber}`,
+    );
+
+  vehicle.driver = driverId;
+}
+
 export const listVehicles = async (req, res) => {
   const { search, status, type, sort = "newest" } = req.query;
 
@@ -80,7 +106,8 @@ export const listVehicles = async (req, res) => {
       .sort(SORTS[sort] || SORTS.newest)
       .collation({ locale: "en", numericOrdering: true }) // "311" before "1000"
       .skip(pagination.skip)
-      .limit(pagination.limit),
+      .limit(pagination.limit)
+      .populate("driver", DRIVER_SELECT),
     Vehicle.countDocuments(filter),
   ]);
 
@@ -112,21 +139,27 @@ export const getSummary = async (req, res) => {
 };
 
 export const getVehicle = async (req, res) => {
-  res.json({ success: true, data: await findOrFail(req.params.id) });
+  const vehicle = await findOrFail(req.params.id);
+  await vehicle.populate("driver", DRIVER_SELECT);
+  res.json({ success: true, data: vehicle });
 };
 
 export const createVehicle = async (req, res) => {
   const vehicle = new Vehicle();
   applyBody(vehicle, req.body);
+  if (has(req.body, "driver")) await setDriver(vehicle, req.body.driver);
   vehicle.createdBy = req.user._id;
   await vehicle.save();
+  await vehicle.populate("driver", DRIVER_SELECT);
   res.status(201).json({ success: true, data: vehicle });
 };
 
 export const updateVehicle = async (req, res) => {
   const vehicle = await findOrFail(req.params.id);
   applyBody(vehicle, req.body);
+  if (has(req.body, "driver")) await setDriver(vehicle, req.body.driver);
   await vehicle.save();
+  await vehicle.populate("driver", DRIVER_SELECT);
   res.json({ success: true, data: vehicle });
 };
 
@@ -136,4 +169,13 @@ export const deleteVehicle = async (req, res) => {
   vehicle.isDeleted = true;
   await vehicle.save();
   res.json({ success: true, message: "Vehicle deleted" });
+};
+
+// Lightweight list for dropdowns (driver form)
+export const vehicleOptions = async (req, res) => {
+  const data = await Vehicle.find({ isDeleted: false, status: { $ne: "sold" } })
+    .select("vehicleNumber make model status driver")
+    .sort({ vehicleNumber: 1 })
+    .collation({ locale: "en", numericOrdering: true });
+  res.json({ success: true, data });
 };

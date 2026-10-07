@@ -110,6 +110,16 @@ vehicleSchema.index(
     },
   },
 );
+vehicleSchema.index(
+  { driver: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      isDeleted: false,
+      driver: { $type: "objectId" },
+    },
+  },
+);
 vehicleSchema.index({ status: 1, isDeleted: 1 });
 
 export default mongoose.model("Vehicle", vehicleSchema);

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { protect, can } from "../middlewares/auth.js";
+import { protect, can, canAny } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validate.js";
 import {
   listVehicles,
@@ -8,6 +8,7 @@ import {
   createVehicle,
   updateVehicle,
   deleteVehicle,
+  vehicleOptions,
 } from "../controllers/vehicleController.js";
 import {
   vehicleIdRule,
@@ -20,6 +21,11 @@ const router = Router();
 router.use(protect);
 
 router.get("/summary", can("vehicles", "view"), getSummary); // must stay above "/:id"
+router.get(
+  "/options",
+  canAny(["vehicles", "view"], ["drivers", "view"]),
+  vehicleOptions,
+);
 router.get("/", can("vehicles", "view"), listVehicles);
 router.get(
   "/:id",

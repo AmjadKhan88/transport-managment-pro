@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
 import vehicleRoutes from "./vehicleRoutes.js";
+import driverRoutes from "./driverRoutes.js";
+import customerRoutes from "./customerRoutes.js";
 
 const router = Router();
 
@@ -19,6 +21,8 @@ router.get("/health", (req, res) => {
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/vehicles", vehicleRoutes);
+router.use("/drivers", driverRoutes);
+router.use("/customers", customerRoutes);
 
 // Future modules get mounted here:
 // router.use("/auth", authRoutes);

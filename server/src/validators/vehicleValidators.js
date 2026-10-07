@@ -41,6 +41,10 @@ const common = [
       .isFloat({ min: 0 })
       .withMessage(`${f} must be 0 or more`),
   ),
+  body("driver")
+    .optional({ values: "falsy" })
+    .isMongoId()
+    .withMessage("Invalid driver"),
 ];
 
 export const createVehicleRules = [

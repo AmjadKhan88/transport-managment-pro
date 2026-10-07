@@ -37,3 +37,19 @@ export const can = (module, action) => (req, res, next) => {
   }
   next();
 };
+
+// Passes if the user has ANY of the given [module, action] pairs
+export const canAny =
+  (...pairs) =>
+  (req, res, next) => {
+    if (
+      pairs.some(([module, action]) =>
+        hasPermission(req.user.role, module, action),
+      )
+    )
+      return next();
+    throw new ApiError(
+      403,
+      "You do not have permission to perform this action",
+    );
+  };
