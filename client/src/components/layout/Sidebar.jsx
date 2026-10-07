@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { navigation, getModuleFromPath } from "@/config/navigation";
 import { NavIcon } from "./icons";
 import { useAuth } from "@/hooks/useAuth";
+import { useVehicleSummary } from "@/hooks/useVehicleSummary";
 
 function NavItem({ item, onNavigate }) {
   return (
@@ -44,8 +45,17 @@ function NavItem({ item, onNavigate }) {
 function SidebarContent({ onNavigate }) {
 
   const { can } = useAuth();
+  const { data: vehicleSummary } = useVehicleSummary(can("vehicles", "view"));
+
   const visibleNav = navigation
-    .map((s) => ({ ...s, items: s.items.filter((i) => can(getModuleFromPath(i.path), "view")) }))
+    .map((s) => ({
+      ...s,
+      items: s.items
+        .filter((i) => can(getModuleFromPath(i.path), "view"))
+        .map((i) =>
+          i.path === "/vehicles" && vehicleSummary ? { ...i, badge: String(vehicleSummary.total) } : i
+        ),
+    }))
     .filter((s) => s.items.length > 0);
 
   return (

@@ -3,7 +3,7 @@ export const navigation = [
     group: "Main",
     items: [
       { label: "Dashboard", path: "/", icon: "dashboard" },
-      { label: "Vehicles", path: "/vehicles", icon: "vehicles", badge: "24" },
+      { label: "Vehicles", path: "/vehicles", icon: "vehicles" },
       { label: "Trips", path: "/trips", icon: "trips" },
       { label: "Drivers", path: "/drivers", icon: "drivers" },
     ],

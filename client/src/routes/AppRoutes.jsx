@@ -7,10 +7,14 @@ import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import Placeholder from "@/pages/Placeholder";
 import Users from "@/pages/users/Users";
+import Vehicles from "@/pages/vehicles/Vehicles";
+import VehicleDetail from "@/pages/vehicles/VehicleDetail";
+
 
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
   "/users": <Users />,
+  "/vehicles": <Vehicles />,
 };
 
 export default function AppRoutes() {
@@ -41,6 +45,14 @@ export default function AppRoutes() {
               }
             />
           ))}
+          <Route
+            path="/vehicles/:id"
+            element={
+              <RequirePermission module="vehicles">
+                <VehicleDetail />
+              </RequirePermission>
+            }
+          />
           <Route path="*" element={<Placeholder title="404 — Page not found" />} />
         </Route>
       </Route>
