@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Drawer from "@/components/ui/Drawer";
 import Select from "@/components/ui/Select";
@@ -7,6 +7,8 @@ import { inputClass, labelClass, primaryBtn, secondaryBtn } from "@/components/u
 import { VEHICLE_TYPES, VEHICLE_STATUSES, OWNERSHIP_TYPES, INVESTMENT_FIELDS } from "@/config/vehicle";
 import { vehicleService } from "@/services/vehicleService";
 import { formatPKR } from "@/utils/format";
+import { Section, Field } from "@/components/ui/FormParts";
+import { driverService } from "@/services/driverService";
 
 const num = (v) => Number(v) || 0;
 const numStr = (n) => (n ? String(n) : "");
@@ -24,34 +26,22 @@ const initialForm = (v) => ({
   ownerName: v?.ownership?.ownerName ?? "",
   ownershipType: v?.ownership?.ownershipType ?? "company",
   ownershipDetails: v?.ownership?.details ?? "",
+  driverId: v?.driver?.id ?? "",
   notes: v?.notes ?? "",
   ...Object.fromEntries(INVESTMENT_FIELDS.map(({ key }) => [key, numStr(v?.investment?.[key])])),
 });
 
-function Section({ title, children }) {
-  return (
-    <section>
-      <h3 className="mb-3 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">{title}</h3>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
-    </section>
-  );
-}
 
-function Field({ label, required, full, children }) {
-  return (
-    <div className={full ? "sm:col-span-2" : ""}>
-      <label className={labelClass}>
-        {label} {required && <span className="text-rose-500">*</span>}
-      </label>
-      {children}
-    </div>
-  );
-}
 
 export default function VehicleDrawer({ vehicle, onClose }) {
   const isEdit = Boolean(vehicle);
   const queryClient = useQueryClient();
   const [form, setForm] = useState(() => initialForm(vehicle));
+
+  const { data: drivers = [] } = useQuery({
+    queryKey: ["drivers", "options"],
+    queryFn: driverService.options,
+  });
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -66,6 +56,7 @@ export default function VehicleDrawer({ vehicle, onClose }) {
         type: form.type,
         make: form.make,
         model: form.model,
+        driver: form.driverId,
         purchaseDate: form.purchaseDate,
         purchasePrice: num(form.purchasePrice),
         currentValue: num(form.currentValue),
@@ -83,6 +74,7 @@ export default function VehicleDrawer({ vehicle, onClose }) {
     onSuccess: () => {
       toast.success(isEdit ? "Vehicle updated" : "Vehicle added");
       queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
       onClose();
     },
     onError: (err) => toast.error(err.message),
@@ -123,6 +115,20 @@ export default function VehicleDrawer({ vehicle, onClose }) {
             </Field>
             <Field label="Model">
               <input name="model" value={form.model} onChange={onChange} placeholder="e.g. FH16" className={inputClass} />
+            </Field>
+            <Field label="Assigned driver" full>
+              <Select name="driverId" value={form.driverId} onChange={onChange}>
+                <option value="">— No driver —</option>
+                {drivers.map((d) => {
+                  const busy = d.vehicle && d.vehicle.id !== vehicle?.id;
+                  return (
+                    <option key={d.id} value={d.id} disabled={Boolean(busy)}>
+                      {d.name}
+                      {busy ? ` — on Truck #${d.vehicle.vehicleNumber}` : ""}
+                    </option>
+                  );
+                })}
+              </Select>
             </Field>
             <Field label="Purchase date">
               <input name="purchaseDate" type="date" value={form.purchaseDate} onChange={onChange} className={inputClass} />

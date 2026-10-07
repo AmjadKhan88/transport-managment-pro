@@ -118,11 +118,12 @@ export default function Vehicles() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px] text-left">
+          <table className="w-full min-w-[920px] text-left">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/60 dark:border-slate-800 dark:bg-slate-800/40">
                 <th className="px-5 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Vehicle</th>
                 <th className="px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Registration</th>
+                <th className="px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Driver</th>
                 <th className="px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Type</th>
                 <th className="px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Purchased</th>
                 <th className="px-4 py-3 text-right text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Investment</th>
@@ -132,13 +133,13 @@ export default function Vehicles() {
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {isLoading && (
-                <tr><td colSpan={7} className="px-5 py-12 text-center text-[13px] text-slate-400">Loading vehicles…</td></tr>
+                <tr><td colSpan={8} className="px-5 py-12 text-center text-[13px] text-slate-400">Loading vehicles…</td></tr>
               )}
               {error && (
-                <tr><td colSpan={7} className="px-5 py-12 text-center text-[13px] text-rose-500">{error.message}</td></tr>
+                <tr><td colSpan={8} className="px-5 py-12 text-center text-[13px] text-rose-500">{error.message}</td></tr>
               )}
               {!isLoading && !error && vehicles.length === 0 && (
-                <tr><td colSpan={7} className="px-5 py-12 text-center text-[13px] text-slate-400">No vehicles found.</td></tr>
+                <tr><td colSpan={8} className="px-5 py-12 text-center text-[13px] text-slate-400">No vehicles found.</td></tr>
               )}
 
               {vehicles.map((v) => (
@@ -157,6 +158,9 @@ export default function Vehicles() {
                     </Link>
                   </td>
                   <td className="px-4 py-3.5 text-[12.5px] font-medium text-slate-600 dark:text-slate-300">{v.registrationNumber || "—"}</td>
+                  <td className="px-4 py-3.5 text-[12.5px] font-medium text-slate-600 dark:text-slate-300">
+                    {v.driver?.name || <span className="text-amber-600 dark:text-amber-400">Unassigned</span>}
+                  </td>
                   <td className="px-4 py-3.5 text-[12.5px] font-medium text-slate-600 dark:text-slate-300">{typeLabel(v.type)}</td>
                   <td className="px-4 py-3.5 text-[12.5px] font-medium text-slate-600 dark:text-slate-300">{formatDate(v.purchaseDate)}</td>
                   <td className="px-4 py-3.5 text-right text-[12.5px] font-semibold text-slate-700 dark:text-slate-200">{formatPKR(v.totalInvestment)}</td>

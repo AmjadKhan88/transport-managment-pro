@@ -8,4 +8,5 @@ export const vehicleService = {
   update: async (id, payload) =>
     (await api.patch(`/vehicles/${id}`, payload)).data.data,
   remove: async (id) => api.delete(`/vehicles/${id}`),
+  options: async () => (await api.get("/vehicles/options")).data.data,
 };

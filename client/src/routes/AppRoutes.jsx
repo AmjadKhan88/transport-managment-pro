@@ -9,13 +9,20 @@ import Placeholder from "@/pages/Placeholder";
 import Users from "@/pages/users/Users";
 import Vehicles from "@/pages/vehicles/Vehicles";
 import VehicleDetail from "@/pages/vehicles/VehicleDetail";
+import Drivers from "@/pages/drivers/Drivers";
+import DriverDetail from "@/pages/drivers/DriverDetail";
+import Customers from "@/pages/customers/Customers";
 
 
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
   "/users": <Users />,
   "/vehicles": <Vehicles />,
+  "/drivers": <Drivers />,
+  "/customers": <Customers />,
 };
+
+
 
 export default function AppRoutes() {
   const items = navigation.flatMap((g) => g.items).filter((i) => i.path !== "/");
@@ -50,6 +57,14 @@ export default function AppRoutes() {
             element={
               <RequirePermission module="vehicles">
                 <VehicleDetail />
+              </RequirePermission>
+            }
+          />
+          <Route
+            path="/drivers/:id"
+            element={
+              <RequirePermission module="drivers">
+                <DriverDetail />
               </RequirePermission>
             }
           />

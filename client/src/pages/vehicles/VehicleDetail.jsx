@@ -79,7 +79,18 @@ export default function VehicleDetail() {
             <Info label="Current value" value={v.currentValue ? formatPKR(v.currentValue) : ""} />
             <Info label="Owner" value={v.ownership?.ownerName} />
             <Info label="Ownership" value={ownershipLabel(v.ownership?.ownershipType)} />
-            <Info label="Assigned driver" value="Available in Step 5" />
+            <Info
+              label="Assigned driver"
+              value={
+                v.driver ? (
+                  <Link to={`/drivers/${v.driver.id}`} className="text-emerald-600 hover:underline dark:text-emerald-400">
+                    {v.driver.name}
+                  </Link>
+                ) : (
+                  "Unassigned"
+                )
+              }
+            />
           </div>
           {v.ownership?.details && (
             <p className="mt-5 text-[12.5px] text-slate-500 dark:text-slate-400">{v.ownership.details}</p>
