@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { getPeriodOptions } from "@/utils/period";
 import ThemeToggle from "./ThemeToggle";
+import UserMenu from "./UserMenu";
 
 export default function Topbar({ onMenuClick }) {
   const searchRef = useRef(null);
@@ -97,15 +98,7 @@ export default function Topbar({ onMenuClick }) {
           </button>
 
           {/* User (static until Auth step) */}
-          <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white py-1.5 pl-1.5 pr-3 dark:border-slate-700 dark:bg-slate-800">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-emerald-500 to-green-700 text-[11px] font-bold text-white">
-              GS
-            </div>
-            <div className="hidden leading-tight sm:block">
-              <p className="text-[12px] font-bold text-slate-800 dark:text-slate-100">Shalmani Sb</p>
-              <p className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">Administrator</p>
-            </div>
-          </div>
+          <UserMenu />
         </div>
       </div>
     </header>

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { navigation } from "@/config/navigation";
+import { navigation, getModuleFromPath } from "@/config/navigation";
 import { NavIcon } from "./icons";
+import { useAuth } from "@/hooks/useAuth";
 
 function NavItem({ item, onNavigate }) {
   return (
@@ -9,8 +10,8 @@ function NavItem({ item, onNavigate }) {
       end={item.path === "/"}
       onClick={onNavigate}
       className={({ isActive }) =>
-        `group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] ${isActive
-          ? "bg-gradient-to-r from-emerald-600 to-green-600 font-semibold text-white shadow-lg shadow-emerald-600/25"
+        `group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] ${isActive
+          ? " bg-green-600 font-semibold text-white shadow-lg shadow-emerald-600/25"
           : "font-medium text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
         }`
       }
@@ -41,11 +42,17 @@ function NavItem({ item, onNavigate }) {
 }
 
 function SidebarContent({ onNavigate }) {
+
+  const { can } = useAuth();
+  const visibleNav = navigation
+    .map((s) => ({ ...s, items: s.items.filter((i) => can(getModuleFromPath(i.path), "view")) }))
+    .filter((s) => s.items.length > 0);
+
   return (
     <>
       {/* Brand */}
       <div className="flex items-center gap-3 px-5 py-5">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-700 shadow-lg shadow-emerald-600/25">
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-green-700 shadow-lg shadow-emerald-600/25">
           <svg
             className="h-5 w-5 text-white"
             viewBox="0 0 24 24"
@@ -65,7 +72,7 @@ function SidebarContent({ onNavigate }) {
           <p className="truncate text-[15px] font-extrabold tracking-tight text-slate-900 dark:text-white">
             Geo Shalmani
           </p>
-          <p className="truncate text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+          <p className="truncate text-[11px] font-medium text-emerald-800 dark:text-emerald-400">
             Transport &amp; Business
           </p>
         </div>
@@ -75,7 +82,7 @@ function SidebarContent({ onNavigate }) {
 
       {/* Nav */}
       <nav className="nav-scroll flex-1 space-y-6 overflow-y-auto px-3 py-4">
-        {navigation.map((section) => (
+        {visibleNav.map((section) => (
           <div key={section.group}>
             <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
               {section.group}
@@ -97,9 +104,9 @@ function SidebarContent({ onNavigate }) {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <p className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">Auto Backup Active</p>
+            <p className="text-[11px] font-bold text-green-800 dark:text-emerald-300">Auto Backup Active</p>
           </div>
-          <p className="mt-1 text-[11px] leading-relaxed text-emerald-700/70 dark:text-emerald-400/70">
+          <p className="mt-1 text-[11px] leading-relaxed text-green-700/70 dark:text-emerald-400/70">
             Last backup: Today, 09:42 AM
           </p>
         </div>

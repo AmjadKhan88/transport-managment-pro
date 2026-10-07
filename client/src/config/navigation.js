@@ -45,3 +45,7 @@ export const navigation = [
     ],
   },
 ];
+
+// Permission key = route path name ("/vehicles" -> "vehicles", "/" -> "dashboard")
+export const getModuleFromPath = (path) =>
+  path === "/" ? "dashboard" : path.slice(1);
