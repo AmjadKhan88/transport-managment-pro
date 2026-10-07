@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: <html class="dark"> */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
@@ -23,6 +26,11 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+html.dark {
+  color-scheme: dark;
+  /* native selects, scrollbars, inputs follow dark */
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -41,9 +49,21 @@ html {
   background: #6ee7b7;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
 .nav-scroll {
   scrollbar-width: thin;
   scrollbar-color: #d1fae5 transparent;
+}
+
+.dark .nav-scroll {
+  scrollbar-color: #334155 transparent;
 }
 
 select {
