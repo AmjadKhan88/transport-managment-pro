@@ -1,0 +1,11 @@
+{
+  "name": "transport-managment-pro",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "install:all": "npm i --prefix server && npm i --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
