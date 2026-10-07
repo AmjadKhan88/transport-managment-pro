@@ -2,6 +2,7 @@ import { Router } from "express";
 import mongoose from "mongoose";
 import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
+import vehicleRoutes from "./vehicleRoutes.js";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.get("/health", (req, res) => {
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
+router.use("/vehicles", vehicleRoutes);
 
 // Future modules get mounted here:
 // router.use("/auth", authRoutes);
