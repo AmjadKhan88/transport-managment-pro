@@ -27,6 +27,7 @@ export const errorHandler = (err, req, res, next) => {
   res.status(status).json({
     success: false,
     message,
+    ...(err.details && { errors: err.details }), // <-- add this line
     ...(env.nodeEnv === "development" && { stack: err.stack }),
   });
 };
