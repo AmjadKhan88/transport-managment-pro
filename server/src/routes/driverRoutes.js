@@ -23,7 +23,7 @@ router.use(protect);
 router.get("/summary", can("drivers", "view"), getSummary);
 router.get(
   "/options",
-  canAny(["drivers", "view"], ["vehicles", "view"]),
+  canAny(["drivers", "view"], ["vehicles", "view"], ["trips", "view"]),
   driverOptions,
 );
 router.get("/", can("drivers", "view"), listDrivers);

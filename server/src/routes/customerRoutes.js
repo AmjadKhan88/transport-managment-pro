@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { protect, can } from "../middlewares/auth.js";
+import { protect, can, canAny } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validate.js";
 import {
   listCustomers,
@@ -8,6 +8,7 @@ import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  customerOptions,
 } from "../controllers/customerController.js";
 import {
   customerIdRule,
@@ -21,6 +22,11 @@ router.use(protect);
 
 router.get("/summary", can("customers", "view"), getSummary);
 router.get("/", can("customers", "view"), listCustomers);
+router.get(
+  "/options",
+  canAny(["customers", "view"], ["trips", "view"]),
+  customerOptions,
+);
 router.get(
   "/:id",
   can("customers", "view"),

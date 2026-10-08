@@ -103,3 +103,12 @@ export const deleteCustomer = async (req, res) => {
   await customer.save();
   res.json({ success: true, message: "Customer deleted" });
 };
+
+// Lightweight list for dropdowns (trip form)
+export const customerOptions = async (req, res) => {
+  const data = await Customer.find({ isDeleted: false, status: "active" })
+    .select("name companyName")
+    .sort({ name: 1 })
+    .collation({ locale: "en" });
+  res.json({ success: true, data });
+};

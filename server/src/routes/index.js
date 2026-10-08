@@ -5,6 +5,7 @@ import userRoutes from "./userRoutes.js";
 import vehicleRoutes from "./vehicleRoutes.js";
 import driverRoutes from "./driverRoutes.js";
 import customerRoutes from "./customerRoutes.js";
+import tripRoutes from "./tripRoutes.js";
 
 const router = Router();
 
@@ -23,9 +24,6 @@ router.use("/users", userRoutes);
 router.use("/vehicles", vehicleRoutes);
 router.use("/drivers", driverRoutes);
 router.use("/customers", customerRoutes);
-
-// Future modules get mounted here:
-// router.use("/auth", authRoutes);
-// router.use("/vehicles", vehicleRoutes);
+router.use("/trips", tripRoutes);
 
 export default router;

@@ -23,7 +23,7 @@ router.use(protect);
 router.get("/summary", can("vehicles", "view"), getSummary); // must stay above "/:id"
 router.get(
   "/options",
-  canAny(["vehicles", "view"], ["drivers", "view"]),
+  canAny(["vehicles", "view"], ["drivers", "view"], ["trips", "view"]),
   vehicleOptions,
 );
 router.get("/", can("vehicles", "view"), listVehicles);
