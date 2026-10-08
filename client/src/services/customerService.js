@@ -8,4 +8,5 @@ export const customerService = {
   update: async (id, payload) =>
     (await api.patch(`/customers/${id}`, payload)).data.data,
   remove: async (id) => api.delete(`/customers/${id}`),
+  options: async () => (await api.get("/customers/options")).data.data,
 };

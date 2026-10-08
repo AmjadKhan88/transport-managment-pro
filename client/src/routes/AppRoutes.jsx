@@ -12,7 +12,7 @@ import VehicleDetail from "@/pages/vehicles/VehicleDetail";
 import Drivers from "@/pages/drivers/Drivers";
 import DriverDetail from "@/pages/drivers/DriverDetail";
 import Customers from "@/pages/customers/Customers";
-
+import Trips from "@/pages/trips/Trips";
 
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
@@ -20,6 +20,7 @@ const pages = {
   "/vehicles": <Vehicles />,
   "/drivers": <Drivers />,
   "/customers": <Customers />,
+  "/trips": <Trips />,
 };
 
 

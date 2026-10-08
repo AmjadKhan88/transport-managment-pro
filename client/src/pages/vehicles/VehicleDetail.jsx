@@ -9,6 +9,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import VehicleStatusBadge from "@/components/vehicles/VehicleStatusBadge";
 import VehicleDrawer from "@/components/vehicles/VehicleDrawer";
 import { primaryBtn, secondaryBtn } from "@/components/ui/styles";
+import VehicleTrips from "@/components/vehicles/VehicleTrips";
 
 const card = "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card dark:border-slate-800 dark:bg-slate-900";
 
@@ -126,9 +127,7 @@ export default function VehicleDetail() {
         </div>
       </div>
 
-      <div className={`${card} text-center text-[13px] text-slate-400`}>
-        Trips, expenses and profit &amp; loss for this vehicle will appear here in the next steps.
-      </div>
+      <VehicleTrips vehicle={v} />
 
       {editing && <VehicleDrawer vehicle={v} onClose={() => setEditing(false)} />}
     </>
