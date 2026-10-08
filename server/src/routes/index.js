@@ -6,6 +6,8 @@ import vehicleRoutes from "./vehicleRoutes.js";
 import driverRoutes from "./driverRoutes.js";
 import customerRoutes from "./customerRoutes.js";
 import tripRoutes from "./tripRoutes.js";
+import dieselRoutes from "./dieselRoutes.js";
+import repairRoutes from "./repairRoutes.js";
 
 const router = Router();
 
@@ -25,5 +27,7 @@ router.use("/vehicles", vehicleRoutes);
 router.use("/drivers", driverRoutes);
 router.use("/customers", customerRoutes);
 router.use("/trips", tripRoutes);
+router.use("/diesel", dieselRoutes);
+router.use("/repairs", repairRoutes);
 
 export default router;
