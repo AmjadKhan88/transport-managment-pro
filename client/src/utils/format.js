@@ -17,3 +17,8 @@ export const formatDate = (d) =>
         year: "numeric",
       })
     : "—";
+
+export const formatSigned = (n) => {
+  const v = Number(n || 0);
+  return `${v < 0 ? "−" : "+"}Rs ${Math.abs(v).toLocaleString("en-PK")}`;
+};

@@ -17,7 +17,7 @@ export default function AppLayout() {
   return (
     <>
       {/* Ambient background */}
-      <AmbientBackground />
+      {/* <AmbientBackground /> */}
 
       <div className="flex min-h-screen">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />

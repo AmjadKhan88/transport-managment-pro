@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
 
 /* Class-based dark mode: <html class="dark"> */
@@ -20,6 +22,10 @@
 
   --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.03);
   --shadow-lift: 0 14px 30px -14px rgba(5, 150, 105, 0.35);
+}
+
+* {
+  font-family: "Roboto", sans-serif;
 }
 
 html {
@@ -70,3 +76,4 @@ select {
   -webkit-appearance: none;
   appearance: none;
 }
+
