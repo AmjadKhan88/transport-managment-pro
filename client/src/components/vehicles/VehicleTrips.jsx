@@ -11,6 +11,9 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { cardClass, primaryBtn } from "@/components/ui/styles";
 import TripDrawer from "@/components/trips/TripDrawer";
 import TripsTable from "@/components/trips/TripsTable";
+import { repairService } from "@/services/repairService";
+import { dieselService } from "@/services/dieselService";
+import { formatNumber } from "@/utils/format";
 
 function Row({ label, value, strong }) {
   return (
@@ -43,6 +46,21 @@ export default function VehicleTrips({ vehicle }) {
     placeholderData: keepPreviousData,
   });
 
+  const canRepairs = can("repairs", "view");
+  const canDiesel = can("diesel", "view");
+  const repairParams = { vehicle: vehicle.id, from: range.from, to: range.to, limit: 1 };
+
+  const { data: repairData } = useQuery({
+    queryKey: ["repairs", "list", repairParams],
+    queryFn: () => repairService.list(repairParams),
+    enabled: canRepairs,
+  });
+  const { data: fuelData } = useQuery({
+    queryKey: ["diesel", "list", repairParams],
+    queryFn: () => dieselService.list(repairParams),
+    enabled: canDiesel,
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (id) => tripService.remove(id),
     onSuccess: () => {
@@ -55,7 +73,9 @@ export default function VehicleTrips({ vehicle }) {
 
   const t = list?.totals;
   const investment = vehicle.totalInvestment || 0;
-  const net = t?.net ?? 0;
+  const repairCost = repairData?.totals?.total ?? 0;
+  const totalExpense = (t?.expense ?? 0) + repairCost;
+  const net = (t?.net ?? 0) - repairCost; // profit after repairs
   const recoveredPct = investment > 0 ? Math.max(0, Math.min((net / investment) * 100, 100)) : 0;
   const recovered = investment > 0 && net >= investment;
 
@@ -85,7 +105,7 @@ export default function VehicleTrips({ vehicle }) {
         <div className={`${cardClass} p-5`}>
           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">Vehicle profit &amp; loss</h3>
           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            Trips only. Repair &amp; maintenance will be deducted once it is built.
+            Trip expenses and repairs. Fuel purchases are shown below for reference.
           </p>
           <div className="divide-y divide-gray-200 dark:divide-gray-800">
             <Row label="Total trips" value={t ? t.count : "—"} />
@@ -94,7 +114,8 @@ export default function VehicleTrips({ vehicle }) {
             <Row label="Driver trip expense" value={formatPKR(t?.driverExpense)} />
             <Row label="Toll tax" value={formatPKR(t?.toll)} />
             <Row label="Other trip expenses" value={formatPKR(t?.other)} />
-            <Row label="Total expenses" value={formatPKR(t?.expense)} strong />
+            <Row label="Total expenses" value={formatPKR(totalExpense)} strong />
+            {canRepairs && <Row label="Repair & maintenance" value={formatPKR(repairCost)} />}
             <div className="flex items-center justify-between py-3">
               <span className="text-[15px] font-semibold text-gray-900 dark:text-gray-100">
                 {net < 0 ? "Net loss" : "Net profit"}
@@ -104,6 +125,12 @@ export default function VehicleTrips({ vehicle }) {
               </span>
             </div>
           </div>
+          {canDiesel && fuelData?.totals && (
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              Fuel purchased (Diesel module): {formatNumber(fuelData.totals.liters)} L · {formatPKR(fuelData.totals.amount)}.
+              For reference only. The diesel cost entered on trips is what counts in profit.
+            </p>
+          )}
         </div>
 
         {/* Investment recovery */}
@@ -119,7 +146,7 @@ export default function VehicleTrips({ vehicle }) {
               <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-50">{formatPKR(investment)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Trip profit</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Profit after repairs</p>
               <p className={`mt-1 text-xl font-semibold ${net < 0 ? "text-red-700 dark:text-red-400" : "text-gray-900 dark:text-gray-50"}`}>
                 {formatSigned(net)}
               </p>

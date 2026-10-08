@@ -22,3 +22,6 @@ export const formatSigned = (n) => {
   const v = Number(n || 0);
   return `${v < 0 ? "−" : "+"}Rs ${Math.abs(v).toLocaleString("en-PK")}`;
 };
+
+export const formatNumber = (n) =>
+  Number(n || 0).toLocaleString("en-PK", { maximumFractionDigits: 2 });
