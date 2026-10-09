@@ -2,7 +2,12 @@ import Select from "./Select";
 import { Field } from "./FormParts";
 import { PAYMENT_METHODS, PAYMENT_STATUSES } from "@/config/payment";
 
-export default function PaymentFields({ method, status, onChange }) {
+export default function PaymentFields({
+  method,
+  status,
+  onChange,
+  unpaidHint = "Unpaid amounts will show up in Payables.",
+}) {
   // onChange receives { paymentMethod, paymentStatus }
   return (
     <>
@@ -19,7 +24,7 @@ export default function PaymentFields({ method, status, onChange }) {
           {PAYMENT_METHODS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
         </Select>
       </Field>
-      <Field label="Payment status" hint={status === "unpaid" ? "Unpaid amounts will show up in Payables." : undefined}>
+      <Field label="Payment status" hint={status === "unpaid" ? unpaidHint : undefined}>
         <Select value={status} onChange={(e) => onChange({ paymentMethod: method, paymentStatus: e.target.value })}>
           {Object.entries(PAYMENT_STATUSES).map(([v, s]) => <option key={v} value={v}>{s.label}</option>)}
         </Select>
