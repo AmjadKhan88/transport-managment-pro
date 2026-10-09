@@ -10,6 +10,8 @@ import dieselRoutes from "./dieselRoutes.js";
 import repairRoutes from "./repairRoutes.js";
 import employeeRoutes from "./employeeRoutes.js";
 import salaryRoutes from "./salaryRoutes.js";
+import shopRoutes from "./shopRoutes.js";
+import officeRoutes from "./officeRoutes.js";
 
 const router = Router();
 
@@ -33,5 +35,7 @@ router.use("/diesel", dieselRoutes);
 router.use("/repairs", repairRoutes);
 router.use("/employees", employeeRoutes);
 router.use("/salaries", salaryRoutes);
+router.use("/shop", shopRoutes);
+router.use("/office", officeRoutes);
 
 export default router;
