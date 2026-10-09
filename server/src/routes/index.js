@@ -8,6 +8,8 @@ import customerRoutes from "./customerRoutes.js";
 import tripRoutes from "./tripRoutes.js";
 import dieselRoutes from "./dieselRoutes.js";
 import repairRoutes from "./repairRoutes.js";
+import employeeRoutes from "./employeeRoutes.js";
+import salaryRoutes from "./salaryRoutes.js";
 
 const router = Router();
 
@@ -29,5 +31,7 @@ router.use("/customers", customerRoutes);
 router.use("/trips", tripRoutes);
 router.use("/diesel", dieselRoutes);
 router.use("/repairs", repairRoutes);
+router.use("/employees", employeeRoutes);
+router.use("/salaries", salaryRoutes);
 
 export default router;
