@@ -5,3 +5,4 @@ server/uploads
 server/backups
 .DS_Store
 project-memory
+guids.md
