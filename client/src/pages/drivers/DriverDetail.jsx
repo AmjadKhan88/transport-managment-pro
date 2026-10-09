@@ -9,6 +9,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import StatusBadge from "@/components/ui/StatusBadge";
 import DriverDrawer from "@/components/drivers/DriverDrawer";
 import { primaryBtn, secondaryBtn } from "@/components/ui/styles";
+import DriverSalaryHistory from "@/components/salaries/DriverSalaryHistory";
 
 const card = "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card dark:border-slate-800 dark:bg-slate-900";
 
@@ -96,14 +97,12 @@ export default function DriverDetail() {
           <p className="mt-0.5 text-[12px] text-slate-400">Basic monthly salary</p>
           <p className="mt-4 text-[26px] font-extrabold tracking-tight text-slate-900 dark:text-white">{formatPKR(d.salary)}</p>
           <p className="mt-3 text-[12px] leading-relaxed text-slate-500 dark:text-slate-400">
-            Advance, bonus, deductions, remaining salary and payment history will appear here once Salaries is built.
+            Advances, payments and remaining salary are shown in the salary history below
           </p>
         </div>
       </div>
 
-      <div className={`${card} text-center text-[13px] text-slate-400`}>
-        Trips, salary history and documents for this driver will appear here in the next steps.
-      </div>
+      <DriverSalaryHistory driverId={d.id} />
 
       {editing && <DriverDrawer driver={d} onClose={() => setEditing(false)} />}
     </>

@@ -45,3 +45,17 @@ export function getDateRange(period, now = new Date()) {
       return {};
   }
 }
+
+export const currentMonth = () => todayStr().slice(0, 7); // "2026-10"
+
+export const monthLabel = (m) =>
+  m
+    ? new Date(`${m}-01T00:00:00Z`).toLocaleDateString("en-GB", {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    : "—";
+
+export const yearChoices = (count = 4) =>
+  Array.from({ length: count }, (_, i) => String(new Date().getFullYear() - i));
