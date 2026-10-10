@@ -22,7 +22,9 @@ import Income from "@/pages/income/Income";
 import Expenses from "@/pages/expenses/Expenses";
 import Investments from "@/pages/investments/Investments";
 import Reports from "@/pages/reports/Reports";
-
+import Receivables from "@/pages/receivables/Receivables";
+import CustomerLedger from "@/pages/receivables/CustomerLedger";
+import Payables from "@/pages/payables/Payables";
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
   "/users": <Users />,
@@ -39,7 +41,8 @@ const pages = {
   "/expenses": <Expenses />,
   "/investments": <Investments />,
   "/reports": <Reports />,
-
+  "/receivables": <Receivables />,
+  "/payables": <Payables />,
 };
 
 
@@ -85,6 +88,14 @@ export default function AppRoutes() {
             element={
               <RequirePermission module="drivers">
                 <DriverDetail />
+              </RequirePermission>
+            }
+          />
+          <Route
+            path="/receivables/:id"
+            element={
+              <RequirePermission module="receivables">
+                <CustomerLedger />
               </RequirePermission>
             }
           />

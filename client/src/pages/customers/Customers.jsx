@@ -13,8 +13,9 @@ import Avatar from "@/components/ui/Avatar";
 import Select from "@/components/ui/Select";
 import Pagination from "@/components/ui/Pagination";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import { inputClass, primaryBtn } from "@/components/ui/styles";
+import { inputClass, primaryBtn, smallBtn } from "@/components/ui/styles";
 import CustomerDrawer from "@/components/customers/CustomerDrawer";
+import { Link } from "react-router-dom";
 
 const iconBtn = "grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition";
 const th = "px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400";
@@ -144,6 +145,9 @@ export default function Customers() {
                     <td className="px-4 py-3.5 text-right"><StatusBadge label={status.label} tone={status.tone} /></td>
                     <td className="px-5 py-3.5">
                       <div className="flex justify-end gap-1">
+                        {can("receivables", "view") && (
+                          <Link to={`/receivables/${c.id}`} className={smallBtn}>Ledger</Link>
+                        )}
                         {can("customers", "edit") && (
                           <button title="Edit" aria-label="Edit customer" onClick={() => setDrawer({ customer: c })}
                             className={`${iconBtn} hover:bg-emerald-50 hover:text-emerald-600 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400`}>
