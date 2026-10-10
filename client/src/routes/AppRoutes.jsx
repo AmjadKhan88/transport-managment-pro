@@ -18,6 +18,10 @@ import Repairs from "@/pages/repairs/Repairs";
 import Salaries from "@/pages/salaries/Salaries";
 import Shop from "@/pages/shop/Shop";
 import Office from "@/pages/office/Office";
+import Income from "@/pages/income/Income";
+import Expenses from "@/pages/expenses/Expenses";
+import Investments from "@/pages/investments/Investments";
+import Reports from "@/pages/reports/Reports";
 
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
@@ -31,6 +35,11 @@ const pages = {
   "/employees": <Salaries />,
   "/shop": <Shop />,
   "/office": <Office />,
+  "/income": <Income />,
+  "/expenses": <Expenses />,
+  "/investments": <Investments />,
+  "/reports": <Reports />,
+
 };
 
 
