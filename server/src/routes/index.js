@@ -19,6 +19,7 @@ import {
   companyRouter,
 } from "./accountingRoutes.js";
 import { receivablesRouter, payablesRouter } from "./settlementRoutes.js";
+import dashboardRoutes from "./dashboardRoutes.js";
 
 const router = Router();
 
@@ -51,5 +52,7 @@ router.use("/investments", investmentRouter);
 router.use("/company", companyRouter);
 router.use("/receivables", receivablesRouter);
 router.use("/payables", payablesRouter);
+
+router.use("/dashboard", dashboardRoutes);
 
 export default router;
