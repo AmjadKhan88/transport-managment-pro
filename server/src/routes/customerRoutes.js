@@ -24,7 +24,7 @@ router.get("/summary", can("customers", "view"), getSummary);
 router.get("/", can("customers", "view"), listCustomers);
 router.get(
   "/options",
-  canAny(["customers", "view"], ["trips", "view"]),
+  canAny(["customers", "view"], ["trips", "view"], ["income", "view"]),
   customerOptions,
 );
 router.get(

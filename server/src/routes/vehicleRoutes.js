@@ -30,6 +30,7 @@ router.get(
     ["trips", "view"],
     ["diesel", "view"],
     ["repairs", "view"],
+    ["expenses", "view"],
   ),
   vehicleOptions,
 );

@@ -12,6 +12,12 @@ import employeeRoutes from "./employeeRoutes.js";
 import salaryRoutes from "./salaryRoutes.js";
 import shopRoutes from "./shopRoutes.js";
 import officeRoutes from "./officeRoutes.js";
+import {
+  incomeRouter,
+  expenseRouter,
+  investmentRouter,
+  companyRouter,
+} from "./accountingRoutes.js";
 
 const router = Router();
 
@@ -37,5 +43,10 @@ router.use("/employees", employeeRoutes);
 router.use("/salaries", salaryRoutes);
 router.use("/shop", shopRoutes);
 router.use("/office", officeRoutes);
+
+router.use("/income", incomeRouter);
+router.use("/expenses", expenseRouter);
+router.use("/investments", investmentRouter);
+router.use("/company", companyRouter);
 
 export default router;
