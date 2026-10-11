@@ -20,6 +20,7 @@ import {
 } from "./accountingRoutes.js";
 import { receivablesRouter, payablesRouter } from "./settlementRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
+import reportsRoutes from "./reportsRoutes.js";
 
 const router = Router();
 
@@ -54,5 +55,6 @@ router.use("/receivables", receivablesRouter);
 router.use("/payables", payablesRouter);
 
 router.use("/dashboard", dashboardRoutes);
+router.use("/reports", reportsRoutes);
 
 export default router;
