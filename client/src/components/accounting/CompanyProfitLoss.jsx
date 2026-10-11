@@ -5,13 +5,22 @@ import { PERIOD_CHOICES, getDateRange } from "@/utils/period";
 import { formatPKR, formatSigned } from "@/utils/format";
 import Select from "@/components/ui/Select";
 import { cardClass, thClass, tdClass } from "@/components/ui/styles";
+import ReportSection from "@/components/reports/ReportSection";
+import ReportTable from "@/components/reports/ReportTable";
 
 const profitClass = (n) => (n < 0 ? "text-red-700 dark:text-red-400" : "text-green-800 dark:text-green-400");
+
+const STATEMENT_COLUMNS = [
+  { key: "item", header: "Item", type: "text" },
+  { key: "from", header: "Comes from", type: "text" },
+  { key: "amount", header: "Amount", type: "money" },
+];
 
 export default function CompanyProfitLoss() {
   const [period, setPeriod] = useState("this-month");
   const range = getDateRange(period);
   const params = { from: range.from, to: range.to };
+  const periodLabel = PERIOD_CHOICES.find((p) => p.value === period)?.label;
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["company", "overview", params],
@@ -23,6 +32,17 @@ export default function CompanyProfitLoss() {
 
   const { income, expenses, netProfit, departments, diesel, customerPayments } = data;
   const dieselGap = diesel.fuelPurchased - diesel.tripDiesel;
+
+  const statement = [
+    { item: "Trip freight", from: "Trips", amount: income.freight },
+    { item: "Shop sales", from: "Shop", amount: income.shopSales },
+    { item: "Other business income", from: "Income entries", amount: income.otherBusiness },
+    { item: "Other receipts", from: "Income entries", amount: income.otherReceipts },
+    { item: "Total income", from: "", amount: income.total, _bold: true },
+    ...expenses.categories.map((c) => ({ item: c.label, from: c.from, amount: c.amount })),
+    { item: "Total expenses", from: "", amount: expenses.total, _bold: true },
+    { item: netProfit < 0 ? "Net loss" : "Net profit", from: "Total income - total expenses", amount: netProfit, _bold: true },
+  ];
 
   return (
     <>
@@ -43,10 +63,10 @@ export default function CompanyProfitLoss() {
           <p className="mt-1.5 text-2xl font-semibold text-gray-900 dark:text-gray-50">{formatPKR(expenses.total)}</p>
           <p className="mt-1 text-[13px] text-gray-500">All 18 categories</p>
         </div>
-        <div className="rounded-xl bg-green-800 p-5 text-white">
-          <p className="text-sm text-green-100">{netProfit < 0 ? "Net loss" : "Net profit"}</p>
+        <div className={`rounded-xl p-5 text-white ${netProfit < 0 ? "bg-red-700" : "bg-green-800"}`}>
+          <p className="text-sm text-white/80">{netProfit < 0 ? "Net loss" : "Net profit"}</p>
           <p className="mt-1.5 text-2xl font-semibold">{formatSigned(netProfit)}</p>
-          <p className="mt-1 text-[13px] text-green-100">Income − expenses (investment not deducted)</p>
+          <p className="mt-1 text-[13px] text-white/80">Income − expenses (investment not deducted)</p>
         </div>
       </div>
 
@@ -85,6 +105,21 @@ export default function CompanyProfitLoss() {
           </table>
         </div>
       </div>
+
+      <ReportSection
+        title="Profit & loss statement"
+        description={`${periodLabel}. Every expense category and where it comes from.`}
+        exportConfig={{
+          title: "Profit and loss statement",
+          subtitle: periodLabel,
+          columns: STATEMENT_COLUMNS,
+          rows: statement,
+          filename: "profit-and-loss",
+          sheetName: "Profit and loss",
+        }}
+      >
+        <ReportTable columns={STATEMENT_COLUMNS} rows={statement} minWidth={560} />
+      </ReportSection>
 
       <div className={`${cardClass} space-y-2 p-5 text-sm text-gray-700 dark:text-gray-300`}>
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">How these numbers are counted</h3>
