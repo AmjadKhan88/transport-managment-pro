@@ -150,7 +150,7 @@ async function toExcel({
   filename,
   sheetName,
 }) {
-  const mod = await import("exceljs");
+  const mod = await import("exceljs/dist/exceljs.min.js")
   const ExcelJS = mod.default ?? mod;
 
   const wb = new ExcelJS.Workbook();
