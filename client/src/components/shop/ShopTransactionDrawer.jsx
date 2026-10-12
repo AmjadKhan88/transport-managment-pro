@@ -9,6 +9,7 @@ import { inputClass, primaryBtn, secondaryBtn } from "@/components/ui/styles";
 import { SHOP_TYPES, SHOP_EXPENSE_CATEGORIES } from "@/config/shop";
 import { shopService } from "@/services/shopService";
 import { todayStr } from "@/utils/period";
+import DocumentsSection from "../documents/DocumentsSection";
 
 const PARTY_LABEL = { sale: "Customer (optional)", purchase: "Supplier (optional)", expense: "Paid to (optional)" };
 const UNPAID_HINT = {
@@ -105,6 +106,7 @@ export default function ShopTransactionDrawer({ entry, onClose }) {
               onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
           </Section>
+          <DocumentsSection entityType="shop" entityId={entry?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

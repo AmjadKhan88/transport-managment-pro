@@ -107,6 +107,7 @@ export default function IncomeDrawer({ entry, onClose }) {
               <textarea name="notes" rows={3} value={form.notes} onChange={onChange} className={`${inputClass} h-auto py-2.5`} />
             </Field>
           </Section>
+          <DocumentsSection entityType="income" entityId={entry?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

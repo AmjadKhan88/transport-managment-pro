@@ -100,6 +100,7 @@ export default function ExpenseDrawer({ expense, onClose }) {
               onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
           </Section>
+          <DocumentsSection entityType="expense" entityId={expense?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

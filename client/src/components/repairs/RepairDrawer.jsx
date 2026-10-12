@@ -11,6 +11,7 @@ import { repairService } from "@/services/repairService";
 import { vehicleService } from "@/services/vehicleService";
 import { todayStr } from "@/utils/period";
 import { formatPKR } from "@/utils/format";
+import DocumentsSection from "@/components/documents/DocumentsSection";
 
 const num = (v) => Number(v) || 0;
 const numStr = (n) => (n ? String(n) : "");
@@ -130,6 +131,7 @@ export default function RepairDrawer({ repair, defaults, onClose }) {
               <input name="nextMaintenanceDate" type="date" value={form.nextMaintenanceDate} onChange={onChange} className={inputClass} />
             </Field>
           </Section>
+          <DocumentsSection entityType="repair" entityId={repair?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

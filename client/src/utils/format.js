@@ -25,3 +25,10 @@ export const formatSigned = (n) => {
 
 export const formatNumber = (n) =>
   Number(n || 0).toLocaleString("en-PK", { maximumFractionDigits: 2 });
+
+export const formatBytes = (n) => {
+  const v = Number(n || 0);
+  if (v < 1024) return `${v} B`;
+  if (v < 1024 * 1024) return `${(v / 1024).toFixed(0)} KB`;
+  return `${(v / (1024 * 1024)).toFixed(1)} MB`;
+};

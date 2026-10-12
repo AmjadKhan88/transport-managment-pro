@@ -15,6 +15,8 @@ import Pagination from "@/components/ui/Pagination";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { cardClass, inputClass, primaryBtn, thClass, tdClass, iconBtn } from "@/components/ui/styles";
 import InvestmentDrawer from "@/components/accounting/InvestmentDrawer";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 function GroupCard({ group }) {
   const meta = INVESTMENT_GROUPS[group.group];
@@ -49,7 +51,10 @@ export default function Investments() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({ search: "", period: "all", group: "", page: 1 });
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
+  });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null);
   const [toDelete, setToDelete] = useState(null);
 

@@ -9,6 +9,7 @@ import { SALARY_METHODS } from "@/config/salary";
 import { salaryService } from "@/services/salaryService";
 import { currentMonth, monthLabel } from "@/utils/period";
 import { formatPKR } from "@/utils/format";
+import DocumentsSection from "@/components/documents/DocumentsSection";
 
 const num = (v) => Number(v) || 0;
 const numStr = (n) => (n ? String(n) : "");
@@ -218,6 +219,7 @@ export default function SalaryDrawer({ record, onClose }) {
               <textarea name="notes" rows={3} value={form.notes} onChange={onChange} className={`${inputClass} h-auto py-2.5`} />
             </Field>
           </Section>
+          <DocumentsSection entityType="salary" entityId={record?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

@@ -25,6 +25,7 @@ import Reports from "@/pages/reports/Reports";
 import Receivables from "@/pages/receivables/Receivables";
 import CustomerLedger from "@/pages/receivables/CustomerLedger";
 import Payables from "@/pages/payables/Payables";
+import Documents from "@/pages/documents/Documents";
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
   "/users": <Users />,
@@ -43,6 +44,7 @@ const pages = {
   "/reports": <Reports />,
   "/receivables": <Receivables />,
   "/payables": <Payables />,
+  "/documents": <Documents />,
 };
 
 

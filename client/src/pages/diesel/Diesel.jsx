@@ -18,6 +18,8 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { cardClass, inputClass, primaryBtn, thClass, tdClass, iconBtn } from "@/components/ui/styles";
 import DieselDrawer from "@/components/diesel/DieselDrawer";
 import DieselReports from "@/components/diesel/DieselReports";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 function Tabs({ value, onChange }) {
   const tabs = [
@@ -46,9 +48,10 @@ function Entries() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({
-    search: "", period: "this-month", vehicle: "", paymentStatus: "", sort: "newest", page: 1,
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
   });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null);
   const [toDelete, setToDelete] = useState(null);
 

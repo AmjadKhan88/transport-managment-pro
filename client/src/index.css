@@ -47,7 +47,8 @@ html.dark {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1fae5;
+  /* background: #d1fae5; */
+  background: green;
   border-radius: 99px;
 }
 
@@ -65,7 +66,8 @@ html.dark {
 
 .nav-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #d1fae5 transparent;
+  /* scrollbar-color: #d1fae5 transparent; */
+  scrollbar-color: green;
 }
 
 .dark .nav-scroll {

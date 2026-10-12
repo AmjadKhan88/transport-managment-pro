@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { getPeriodOptions } from "@/utils/period";
 import ThemeToggle from "./ThemeToggle";
 import UserMenu from "./UserMenu";
+import GlobalSearch from "./GlobalSearch";
 
 export default function Topbar({ onMenuClick }) {
-  const searchRef = useRef(null);
+
   const periods = useMemo(() => getPeriodOptions(), []);
 
   useEffect(() => {
@@ -34,28 +35,7 @@ export default function Topbar({ onMenuClick }) {
         </button>
 
         {/* Search */}
-        <div className="relative hidden max-w-md flex-1 sm:block">
-          <svg
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" />
-          </svg>
-          <input
-            ref={searchRef}
-            type="text"
-            placeholder="Search vehicle #311, driver, party, trip…"
-            className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-10 pr-16 text-[13px] text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-emerald-500/60 dark:focus:bg-slate-800"
-          />
-          <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 sm:block dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
-            ⌘K
-          </kbd>
-        </div>
+        <GlobalSearch />
 
         <div className="ml-auto flex items-center gap-2">
           {/* Period */}

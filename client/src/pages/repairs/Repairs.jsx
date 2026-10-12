@@ -18,6 +18,8 @@ import Pagination from "@/components/ui/Pagination";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { cardClass, inputClass, primaryBtn, thClass, tdClass, iconBtn } from "@/components/ui/styles";
 import RepairDrawer from "@/components/repairs/RepairDrawer";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 const daysUntil = (iso) => Math.round((Date.parse(iso.slice(0, 10)) - Date.parse(todayStr())) / 86400000);
 
@@ -63,9 +65,10 @@ export default function Repairs() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({
-    search: "", period: "this-year", vehicle: "", category: "", paymentStatus: "", sort: "newest", page: 1,
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
   });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null);
   const [toDelete, setToDelete] = useState(null);
 

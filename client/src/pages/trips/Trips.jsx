@@ -17,14 +17,17 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { cardClass, inputClass, primaryBtn } from "@/components/ui/styles";
 import TripDrawer from "@/components/trips/TripDrawer";
 import TripsTable from "@/components/trips/TripsTable";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 export default function Trips() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = usePersistedFilters("trips", {
     search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
   });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null); // { trip? }
   const [toDelete, setToDelete] = useState(null);
 

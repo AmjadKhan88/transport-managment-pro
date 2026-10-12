@@ -16,6 +16,8 @@ import Pagination from "@/components/ui/Pagination";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { inputClass, primaryBtn } from "@/components/ui/styles";
 import DriverDrawer from "@/components/drivers/DriverDrawer";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 const iconBtn = "grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition";
 const th = "px-4 py-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400";
@@ -25,7 +27,10 @@ export default function Drivers() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({ search: "", status: "", sort: "newest", page: 1 });
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
+  });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null);
   const [toDelete, setToDelete] = useState(null);
 

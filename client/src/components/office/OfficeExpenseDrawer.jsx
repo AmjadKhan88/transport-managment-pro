@@ -9,6 +9,7 @@ import { inputClass, primaryBtn, secondaryBtn } from "@/components/ui/styles";
 import { OFFICE_CATEGORIES } from "@/config/office";
 import { officeService } from "@/services/officeService";
 import { todayStr } from "@/utils/period";
+import DocumentsSection from "../documents/DocumentsSection";
 
 const initialForm = (e) => ({
   expenseDate: e?.expenseDate ? e.expenseDate.slice(0, 10) : todayStr(),
@@ -82,6 +83,7 @@ export default function OfficeExpenseDrawer({ expense, onClose }) {
               onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
           </Section>
+          <DocumentsSection entityType="office" entityId={expense?.id} />
         </div>
 
         <div className="flex justify-end gap-2 border-t border-gray-200 px-6 py-4 dark:border-gray-800">

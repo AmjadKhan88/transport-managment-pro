@@ -10,6 +10,7 @@ import VehicleStatusBadge from "@/components/vehicles/VehicleStatusBadge";
 import VehicleDrawer from "@/components/vehicles/VehicleDrawer";
 import { primaryBtn, secondaryBtn } from "@/components/ui/styles";
 import VehicleTrips from "@/components/vehicles/VehicleTrips";
+import DocumentsPanel from "@/components/documents/DocumentsPanel";
 
 const card = "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card dark:border-slate-800 dark:bg-slate-900";
 
@@ -128,6 +129,7 @@ export default function VehicleDetail() {
       </div>
 
       <VehicleTrips vehicle={v} />
+      <DocumentsPanel vehicleId={v.id} title="Documents and bills (registration, insurance, repair bills, fuel receipts)" />
 
       {editing && <VehicleDrawer vehicle={v} onClose={() => setEditing(false)} />}
     </>

@@ -10,6 +10,10 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import DriverDrawer from "@/components/drivers/DriverDrawer";
 import { primaryBtn, secondaryBtn } from "@/components/ui/styles";
 import DriverSalaryHistory from "@/components/salaries/DriverSalaryHistory";
+import DocumentsPanel from "@/components/documents/DocumentsPanel";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
+
 
 const card = "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card dark:border-slate-800 dark:bg-slate-900";
 
@@ -103,6 +107,7 @@ export default function DriverDetail() {
       </div>
 
       <DriverSalaryHistory driverId={d.id} />
+      <DocumentsPanel entityType="driver" entityId={d.id} title="Documents (CNIC copy, license)" />
 
       {editing && <DriverDrawer driver={d} onClose={() => setEditing(false)} />}
     </>

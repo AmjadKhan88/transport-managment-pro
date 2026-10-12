@@ -21,6 +21,8 @@ import {
 import { receivablesRouter, payablesRouter } from "./settlementRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
 import reportsRoutes from "./reportsRoutes.js";
+import documentRoutes from "./documentRoutes.js";
+import searchRoutes from "./searchRoutes.js";
 
 const router = Router();
 
@@ -56,5 +58,8 @@ router.use("/payables", payablesRouter);
 
 router.use("/dashboard", dashboardRoutes);
 router.use("/reports", reportsRoutes);
+
+router.use("/documents", documentRoutes);
+router.use("/search", searchRoutes);
 
 export default router;

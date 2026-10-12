@@ -12,12 +12,17 @@ import Select from "@/components/ui/Select";
 import Pagination from "@/components/ui/Pagination";
 import { cardClass, inputClass, smallBtn, primaryBtn, thClass, tdClass } from "@/components/ui/styles";
 import ReceivePaymentDrawer from "@/components/receivables/ReceivePaymentDrawer";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 const money = (n) => (n ? formatPKR(n) : "—");
 
 export default function Receivables() {
   const { can } = useAuth();
-  const [filters, setFilters] = useState({ search: "", all: "", asOf: todayStr(), page: 1 });
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
+  });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [paying, setPaying] = useState(null);
 
   const debouncedSearch = useDebounce(filters.search);

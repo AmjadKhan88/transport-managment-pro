@@ -16,6 +16,8 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { inputClass, primaryBtn } from "@/components/ui/styles";
 import VehicleDrawer from "@/components/vehicles/VehicleDrawer";
 import VehicleStatusBadge from "@/components/vehicles/VehicleStatusBadge";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useUrlSearch } from "@/hooks/useUrlSearch";
 
 const iconBtn =
   "grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition";
@@ -24,7 +26,10 @@ export default function Vehicles() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
 
-  const [filters, setFilters] = useState({ search: "", status: "", type: "", sort: "newest", page: 1 });
+  const [filters, setFilters] = usePersistedFilters("trips", {
+    search: "", period: "this-month", vehicle: "", customer: "", status: "", sort: "newest", page: 1,
+  });
+  useUrlSearch((q) => setFilters((f) => ({ ...f, search: q, page: 1 })));
   const [drawer, setDrawer] = useState(null); // { vehicle? }
   const [toDelete, setToDelete] = useState(null);
 
