@@ -42,7 +42,12 @@ const documentSchema = new mongoose.Schema(
     },
 
     originalName: { type: String, required: true },
-    storedName: { type: String, required: true }, // relative to uploads/documents
+    // storedName: { type: String, required: true }, // relative to uploads/documents
+    // where the file lives on Cloudinary
+    publicId: { type: String, required: true },
+    resourceType: { type: String, enum: ["image", "raw"], required: true },
+    format: String,
+    version: Number,
     mimeType: { type: String, required: true },
     size: { type: Number, required: true },
 
@@ -58,7 +63,8 @@ const documentSchema = new mongoose.Schema(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.storedName; // never expose server paths
+        // delete ret.storedName; // never expose server paths
+        delete ret.publicId;
         return ret;
       },
     },

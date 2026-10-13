@@ -20,6 +20,11 @@ import {
   buildMeta,
   toObjectId,
 } from "../utils/queryHelpers.js";
+import {
+  uploadBuffer,
+  signedUrl,
+  destroyAsset,
+} from "../services/cloudStorage.js";
 
 const ENTITY_MODELS = {
   vehicle: Vehicle,
@@ -40,7 +45,7 @@ const todayUTC = () => {
   return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
 };
 
-const absolutePath = (storedName) => path.join(UPLOAD_ROOT, storedName);
+// const absolutePath = (storedName) => path.join(UPLOAD_ROOT, storedName);
 
 // ---- readable labels for "linked to" ---------------------------------------------
 async function withLabels(docs) {
@@ -245,47 +250,116 @@ export const listDocuments = async (req, res) => {
 };
 
 // ---- upload ------------------------------------------------------------------------------
+// export const createDocument = async (req, res) => {
+//   const file = req.file;
+//   try {
+//     if (!file) throw new ApiError(400, "Choose a file to upload");
+//     await verifySignature(file.path, file.mimetype);
+
+//     const {
+//       title,
+//       category = "other",
+//       entityType,
+//       entityId,
+//       expiryDate,
+//       notes,
+//     } = req.body;
+//     if (!DOC_CATEGORIES.includes(category))
+//       throw new ApiError(400, "Invalid category");
+//     if (expiryDate && Number.isNaN(Date.parse(expiryDate)))
+//       throw new ApiError(400, "Invalid expiry date");
+
+//     let linkType;
+//     let linkId;
+//     let vehicle = null;
+//     if (entityType) {
+//       if (!ENTITY_TYPES.includes(entityType))
+//         throw new ApiError(400, "Invalid linked record type");
+//       const id = toObjectId(entityId);
+//       if (!id) throw new ApiError(400, "Invalid linked record");
+//       const target = await ENTITY_MODELS[entityType]
+//         .findOne({ _id: id, isDeleted: false })
+//         .select("vehicle");
+//       if (!target) throw new ApiError(404, "The linked record was not found");
+//       linkType = entityType;
+//       linkId = id;
+//       vehicle = entityType === "vehicle" ? id : (target.vehicle ?? null);
+//     }
+
+//     // multer reads file names as latin1; restore the real UTF-8 name
+//     const originalName = Buffer.from(file.originalname, "latin1").toString(
+//       "utf8",
+//     );
+
+//     const doc = await Document.create({
+//       title: title?.trim() || path.parse(originalName).name,
+//       category,
+//       entityType: linkType,
+//       entityId: linkId,
+//       vehicle,
+//       originalName,
+//       storedName: path.relative(UPLOAD_ROOT, file.path).replaceAll("\\", "/"),
+//       mimeType: file.mimetype,
+//       size: file.size,
+//       expiryDate: expiryDate ? new Date(expiryDate) : undefined,
+//       notes: notes?.trim() || undefined,
+//       uploadedBy: req.user._id,
+//     });
+
+//     const [data] = await withLabels([doc]);
+//     res.status(201).json({ success: true, data });
+//   } catch (err) {
+//     if (file) await fs.unlink(file.path).catch(() => {});
+//     throw err;
+//   }
+// }; // working with local folder upload
+
 export const createDocument = async (req, res) => {
   const file = req.file;
+  if (!file) throw new ApiError(400, "Choose a file to upload");
+  verifySignature(file.buffer, file.mimetype);
+
+  const {
+    title,
+    category = "other",
+    entityType,
+    entityId,
+    expiryDate,
+    notes,
+  } = req.body;
+  if (!DOC_CATEGORIES.includes(category))
+    throw new ApiError(400, "Invalid category");
+  if (expiryDate && Number.isNaN(Date.parse(expiryDate)))
+    throw new ApiError(400, "Invalid expiry date");
+
+  let linkType;
+  let linkId;
+  let vehicle = null;
+  if (entityType) {
+    if (!ENTITY_TYPES.includes(entityType))
+      throw new ApiError(400, "Invalid linked record type");
+    const id = toObjectId(entityId);
+    if (!id) throw new ApiError(400, "Invalid linked record");
+    const target = await ENTITY_MODELS[entityType]
+      .findOne({ _id: id, isDeleted: false })
+      .select("vehicle");
+    if (!target) throw new ApiError(404, "The linked record was not found");
+    linkType = entityType;
+    linkId = id;
+    vehicle = entityType === "vehicle" ? id : (target.vehicle ?? null);
+  }
+
+  // multer reads file names as latin1; restore the real UTF-8 name
+  const originalName = Buffer.from(file.originalname, "latin1").toString(
+    "utf8",
+  );
+
+  const uploaded = await uploadBuffer({
+    buffer: file.buffer,
+    mimeType: file.mimetype,
+  });
+
   try {
-    if (!file) throw new ApiError(400, "Choose a file to upload");
-    await verifySignature(file.path, file.mimetype);
-
-    const {
-      title,
-      category = "other",
-      entityType,
-      entityId,
-      expiryDate,
-      notes,
-    } = req.body;
-    if (!DOC_CATEGORIES.includes(category))
-      throw new ApiError(400, "Invalid category");
-    if (expiryDate && Number.isNaN(Date.parse(expiryDate)))
-      throw new ApiError(400, "Invalid expiry date");
-
-    let linkType;
-    let linkId;
-    let vehicle = null;
-    if (entityType) {
-      if (!ENTITY_TYPES.includes(entityType))
-        throw new ApiError(400, "Invalid linked record type");
-      const id = toObjectId(entityId);
-      if (!id) throw new ApiError(400, "Invalid linked record");
-      const target = await ENTITY_MODELS[entityType]
-        .findOne({ _id: id, isDeleted: false })
-        .select("vehicle");
-      if (!target) throw new ApiError(404, "The linked record was not found");
-      linkType = entityType;
-      linkId = id;
-      vehicle = entityType === "vehicle" ? id : (target.vehicle ?? null);
-    }
-
-    // multer reads file names as latin1; restore the real UTF-8 name
-    const originalName = Buffer.from(file.originalname, "latin1").toString(
-      "utf8",
-    );
-
     const doc = await Document.create({
       title: title?.trim() || path.parse(originalName).name,
       category,
@@ -293,7 +367,10 @@ export const createDocument = async (req, res) => {
       entityId: linkId,
       vehicle,
       originalName,
-      storedName: path.relative(UPLOAD_ROOT, file.path).replaceAll("\\", "/"),
+      publicId: uploaded.publicId,
+      resourceType: uploaded.resourceType,
+      format: uploaded.format,
+      version: uploaded.version,
       mimeType: file.mimetype,
       size: file.size,
       expiryDate: expiryDate ? new Date(expiryDate) : undefined,
@@ -304,7 +381,7 @@ export const createDocument = async (req, res) => {
     const [data] = await withLabels([doc]);
     res.status(201).json({ success: true, data });
   } catch (err) {
-    if (file) await fs.unlink(file.path).catch(() => {});
+    await destroyAsset(uploaded).catch(() => {}); // don't leave an orphan file on Cloudinary
     throw err;
   }
 };
@@ -342,33 +419,47 @@ export const updateDocument = async (req, res) => {
 };
 
 // ---- delete: the file is removed from disk for good ---------------------------------------------
+// export const deleteDocument = async (req, res) => {
+//   const doc = await findOrFail(req.params.id);
+//   doc.isDeleted = true;
+//   await doc.save();
+//   await fs.unlink(absolutePath(doc.storedName)).catch(() => {});
+//   res.json({ success: true, message: "Document deleted" });
+// };
+
 export const deleteDocument = async (req, res) => {
   const doc = await findOrFail(req.params.id);
+  await destroyAsset(doc);
   doc.isDeleted = true;
   await doc.save();
-  await fs.unlink(absolutePath(doc.storedName)).catch(() => {});
   res.json({ success: true, message: "Document deleted" });
 };
 
 // ---- download / preview (authenticated) --------------------------------------------------------------
+// export const downloadDocument = async (req, res) => {
+//   const doc = await findOrFail(req.params.id);
+//   const file = absolutePath(doc.storedName);
+
+//   try {
+//     await fs.access(file);
+//   } catch {
+//     throw new ApiError(404, "The file is missing on the server");
+//   }
+
+//   const inline =
+//     doc.mimeType === "application/pdf" || doc.mimeType.startsWith("image/");
+//   res.sendFile(file, {
+//     headers: {
+//       "Content-Type": doc.mimeType,
+//       "Content-Disposition": `${inline ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(doc.originalName)}`,
+//       "X-Content-Type-Options": "nosniff",
+//       "Cache-Control": "private, max-age=0",
+//     },
+//   });
+// };
+
 export const downloadDocument = async (req, res) => {
   const doc = await findOrFail(req.params.id);
-  const file = absolutePath(doc.storedName);
-
-  try {
-    await fs.access(file);
-  } catch {
-    throw new ApiError(404, "The file is missing on the server");
-  }
-
-  const inline =
-    doc.mimeType === "application/pdf" || doc.mimeType.startsWith("image/");
-  res.sendFile(file, {
-    headers: {
-      "Content-Type": doc.mimeType,
-      "Content-Disposition": `${inline ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(doc.originalName)}`,
-      "X-Content-Type-Options": "nosniff",
-      "Cache-Control": "private, max-age=0",
-    },
-  });
+  res.set("Cache-Control", "private, no-store");
+  res.redirect(signedUrl(doc));
 };
