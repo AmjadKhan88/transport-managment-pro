@@ -13,7 +13,6 @@ import Expense from "../models/Expense.js";
 import Income from "../models/Income.js";
 import { ApiError } from "../utils/ApiError.js";
 import { verifySignature } from "../utils/fileSignature.js";
-import { UPLOAD_ROOT } from "../middlewares/upload.js";
 import {
   escapeRegex,
   getPagination,
@@ -250,69 +249,6 @@ export const listDocuments = async (req, res) => {
 };
 
 // ---- upload ------------------------------------------------------------------------------
-// export const createDocument = async (req, res) => {
-//   const file = req.file;
-//   try {
-//     if (!file) throw new ApiError(400, "Choose a file to upload");
-//     await verifySignature(file.path, file.mimetype);
-
-//     const {
-//       title,
-//       category = "other",
-//       entityType,
-//       entityId,
-//       expiryDate,
-//       notes,
-//     } = req.body;
-//     if (!DOC_CATEGORIES.includes(category))
-//       throw new ApiError(400, "Invalid category");
-//     if (expiryDate && Number.isNaN(Date.parse(expiryDate)))
-//       throw new ApiError(400, "Invalid expiry date");
-
-//     let linkType;
-//     let linkId;
-//     let vehicle = null;
-//     if (entityType) {
-//       if (!ENTITY_TYPES.includes(entityType))
-//         throw new ApiError(400, "Invalid linked record type");
-//       const id = toObjectId(entityId);
-//       if (!id) throw new ApiError(400, "Invalid linked record");
-//       const target = await ENTITY_MODELS[entityType]
-//         .findOne({ _id: id, isDeleted: false })
-//         .select("vehicle");
-//       if (!target) throw new ApiError(404, "The linked record was not found");
-//       linkType = entityType;
-//       linkId = id;
-//       vehicle = entityType === "vehicle" ? id : (target.vehicle ?? null);
-//     }
-
-//     // multer reads file names as latin1; restore the real UTF-8 name
-//     const originalName = Buffer.from(file.originalname, "latin1").toString(
-//       "utf8",
-//     );
-
-//     const doc = await Document.create({
-//       title: title?.trim() || path.parse(originalName).name,
-//       category,
-//       entityType: linkType,
-//       entityId: linkId,
-//       vehicle,
-//       originalName,
-//       storedName: path.relative(UPLOAD_ROOT, file.path).replaceAll("\\", "/"),
-//       mimeType: file.mimetype,
-//       size: file.size,
-//       expiryDate: expiryDate ? new Date(expiryDate) : undefined,
-//       notes: notes?.trim() || undefined,
-//       uploadedBy: req.user._id,
-//     });
-
-//     const [data] = await withLabels([doc]);
-//     res.status(201).json({ success: true, data });
-//   } catch (err) {
-//     if (file) await fs.unlink(file.path).catch(() => {});
-//     throw err;
-//   }
-// }; // working with local folder upload
 
 export const createDocument = async (req, res) => {
   const file = req.file;
@@ -419,14 +355,6 @@ export const updateDocument = async (req, res) => {
 };
 
 // ---- delete: the file is removed from disk for good ---------------------------------------------
-// export const deleteDocument = async (req, res) => {
-//   const doc = await findOrFail(req.params.id);
-//   doc.isDeleted = true;
-//   await doc.save();
-//   await fs.unlink(absolutePath(doc.storedName)).catch(() => {});
-//   res.json({ success: true, message: "Document deleted" });
-// };
-
 export const deleteDocument = async (req, res) => {
   const doc = await findOrFail(req.params.id);
   await destroyAsset(doc);
