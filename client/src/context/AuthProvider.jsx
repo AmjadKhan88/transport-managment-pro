@@ -46,12 +46,14 @@ export default function AuthProvider({ children }) {
     }
   }, [queryClient]);
 
+  const refresh = useCallback(async () => setUser(await authService.me()), []);
+
   const can = useCallback(
     (module, action = "view") => Boolean(user?.permissions?.[module]?.includes(action)),
     [user]
   );
 
-  const value = useMemo(() => ({ user, loading, login, logout, can }), [user, loading, login, logout, can]);
+  const value = useMemo(() => ({ user, loading, login, logout, can, refresh }), [user, loading, login, logout, can, refresh]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

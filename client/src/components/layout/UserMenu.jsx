@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS } from "@/config/roles";
+import { Link } from "react-router-dom";
 
 export default function UserMenu() {
   const { user, logout } = useAuth();
@@ -44,6 +45,13 @@ export default function UserMenu() {
             <p className="truncate text-[13px] font-bold text-slate-800 dark:text-slate-100">{user.name}</p>
             <p className="truncate text-[11px] text-slate-400">{user.email}</p>
           </div>
+          <Link
+            to="/settings"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center px-4 py-3 text-[15px] text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            Account settings
+          </Link>
           <button
             type="button"
             onClick={logout}

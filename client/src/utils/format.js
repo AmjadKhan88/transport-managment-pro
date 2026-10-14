@@ -32,3 +32,14 @@ export const formatBytes = (n) => {
   if (v < 1024 * 1024) return `${(v / 1024).toFixed(0)} KB`;
   return `${(v / (1024 * 1024)).toFixed(1)} MB`;
 };
+
+export const formatDateTime = (d) =>
+  d
+    ? new Date(d).toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "—";

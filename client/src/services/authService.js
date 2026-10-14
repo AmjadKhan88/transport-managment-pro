@@ -7,4 +7,6 @@ export const authService = {
   me: async () => (await api.get("/auth/me")).data.data.user,
   changePassword: async (currentPassword, newPassword) =>
     api.patch("/auth/change-password", { currentPassword, newPassword }),
+  updateProfile: async (name) =>
+    (await api.patch("/auth/profile", { name })).data.data.user,
 };
