@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
     },
     isActive: { type: Boolean, default: true },
     lastLoginAt: Date,
+    failedLogins: { type: Number, default: 0 },
+    lockUntil: Date,
+    passwordChangedAt: Date, // sessions created before this are no longer valid
   },
   {
     timestamps: true,
@@ -34,6 +37,9 @@ const userSchema = new mongoose.Schema(
         ret.id = ret._id;
         delete ret._id;
         delete ret.password;
+        delete ret.failedLogins;
+        delete ret.lockUntil;
+        delete ret.passwordChangedAt;
         return ret;
       },
     },
@@ -43,6 +49,8 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
+  // a changed password ends every older session (a second back covers clock rounding)
+  if (!this.isNew) this.passwordChangedAt = new Date(Date.now() - 1000);
 });
 
 userSchema.methods.comparePassword = function (plain) {

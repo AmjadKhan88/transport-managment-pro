@@ -41,7 +41,7 @@ const matrix = {
   [ROLES.ADMIN]: grant(MODULES, ACTIONS),
 
   [ROLES.ACCOUNTS]: {
-    ...grant(["dashboard", "vehicles", "drivers", "reports"], V),
+    ...grant(["dashboard", "vehicles", "drivers", "reports", "settings"], V),
     ...grant(
       [
         "trips",
@@ -63,13 +63,14 @@ const matrix = {
   },
 
   [ROLES.VEHICLE_MANAGER]: {
-    ...grant(["dashboard", "customers", "reports"], V),
+    ...grant(["dashboard", "customers", "reports", "settings"], V),
     ...grant(["vehicles", "drivers", "trips", "diesel", "repairs"], VAE),
     documents: VA,
   },
 
   [ROLES.DATA_ENTRY]: {
     dashboard: V,
+    settings: V,
     ...grant(
       [
         "trips",
@@ -85,7 +86,7 @@ const matrix = {
   },
 
   [ROLES.VIEW_ONLY]: grant(
-    MODULES.filter((m) => !["users", "settings", "backup"].includes(m)),
+    MODULES.filter((m) => !["users", "backup"].includes(m)),
     V,
   ),
 };

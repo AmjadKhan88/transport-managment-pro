@@ -5,12 +5,14 @@ import {
   logout,
   me,
   changePassword,
+  updateProfile,
 } from "../controllers/authController.js";
 import { protect } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validate.js";
 import {
   loginRules,
   changePasswordRules,
+  profileRules,
 } from "../validators/authValidators.js";
 
 const router = Router();
@@ -37,5 +39,5 @@ router.patch(
   validate,
   changePassword,
 );
-
+router.patch("/profile", protect, profileRules, validate, updateProfile);
 export default router;

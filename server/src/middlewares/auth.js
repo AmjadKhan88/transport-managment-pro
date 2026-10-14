@@ -23,6 +23,14 @@ export const protect = async (req, res, next) => {
   if (!user || !user.isActive)
     throw new ApiError(401, "Account is not available");
 
+  // the password was changed after this login was issued: the old session is no longer valid
+  if (
+    user.passwordChangedAt &&
+    decoded.iat * 1000 < user.passwordChangedAt.getTime()
+  ) {
+    throw new ApiError(401, "Your password was changed. Please log in again.");
+  }
+
   req.user = user;
   next();
 };

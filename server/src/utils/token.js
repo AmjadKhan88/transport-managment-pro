@@ -8,8 +8,8 @@ export const signToken = (userId) =>
 
 const baseCookie = () => ({
   httpOnly: true,
-  secure: env.nodeEnv === "production",
-  sameSite: "lax", // if client & API are on different domains in production, use "none" + secure
+  secure: env.isProd || env.cookieSameSite === "none",
+  sameSite: env.cookieSameSite, // "lax" normally; "none" only when the site and API are on different domains
   path: "/",
 });
 

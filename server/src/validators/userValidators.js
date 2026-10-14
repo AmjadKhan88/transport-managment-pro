@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { ROLES } from "../config/permissions.js";
+import { strongPassword } from "./authValidators.js";
 
 const roles = Object.values(ROLES);
 
@@ -10,9 +11,7 @@ export const createUserRules = [
     .toLowerCase()
     .isEmail()
     .withMessage("Enter a valid email"),
-  body("password")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
+  strongPassword("password"),
   body("role").isIn(roles).withMessage("Invalid role"),
 ];
 
@@ -31,8 +30,4 @@ export const updateUserRules = [
     .withMessage("isActive must be true or false"),
 ];
 
-export const resetPasswordRules = [
-  body("password")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
-];
+export const resetPasswordRules = [strongPassword("password")];
