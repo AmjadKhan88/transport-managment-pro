@@ -24,6 +24,10 @@ import reportsRoutes from "./reportsRoutes.js";
 import documentRoutes from "./documentRoutes.js";
 import searchRoutes from "./searchRoutes.js";
 
+import backupRoutes from "./backupRoutes.js";
+import auditRoutes from "./auditRoutes.js";
+import systemRoutes from "./systemRoutes.js";
+
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -61,5 +65,9 @@ router.use("/reports", reportsRoutes);
 
 router.use("/documents", documentRoutes);
 router.use("/search", searchRoutes);
+
+router.use("/backups", backupRoutes);
+router.use("/audit", auditRoutes);
+router.use("/system", systemRoutes);
 
 export default router;
