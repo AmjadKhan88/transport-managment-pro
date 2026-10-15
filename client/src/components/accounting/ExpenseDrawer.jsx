@@ -10,6 +10,7 @@ import { EXPENSE_CATEGORIES, DEPARTMENT_TAGS, CATEGORY_HINTS } from "@/config/ac
 import { expenseService } from "@/services/accountingServices";
 import { vehicleService } from "@/services/vehicleService";
 import { todayStr } from "@/utils/period";
+import DocumentsSection from "../documents/DocumentsSection";
 
 const withCurrent = (list, current) =>
   current && !list.some((i) => i.id === current.id) ? [current, ...list] : list;
