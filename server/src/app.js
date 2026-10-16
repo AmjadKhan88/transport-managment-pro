@@ -11,6 +11,7 @@ import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 import { rejectOperatorKeys } from "./middlewares/security.js";
 import { auditLogger } from "./middlewares/audit.js";
 import { ApiError } from "./utils/ApiError.js";
+import { activityNotifier } from "./services/activity.js";
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use("/api", (req, res, next) =>
 
 app.use("/api", rejectOperatorKeys);
 app.use("/api", auditLogger);
+app.use("/api", activityNotifier);
 app.use("/api", routes);
 
 app.use(notFound);

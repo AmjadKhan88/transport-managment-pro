@@ -27,6 +27,7 @@ export const MODULES = [
   "users",
   "settings",
   "backup",
+  "notifications",
 ];
 
 export const ACTIONS = ["view", "add", "edit", "delete"];
@@ -41,7 +42,17 @@ const matrix = {
   [ROLES.ADMIN]: grant(MODULES, ACTIONS),
 
   [ROLES.ACCOUNTS]: {
-    ...grant(["dashboard", "vehicles", "drivers", "reports", "settings"], V),
+    ...grant(
+      [
+        "dashboard",
+        "vehicles",
+        "drivers",
+        "reports",
+        "settings",
+        "notifications",
+      ],
+      V,
+    ),
     ...grant(
       [
         "trips",
@@ -63,7 +74,10 @@ const matrix = {
   },
 
   [ROLES.VEHICLE_MANAGER]: {
-    ...grant(["dashboard", "customers", "reports", "settings"], V),
+    ...grant(
+      ["dashboard", "customers", "reports", "settings", "notifications"],
+      V,
+    ),
     ...grant(["vehicles", "drivers", "trips", "diesel", "repairs"], VAE),
     documents: VA,
   },
@@ -71,6 +85,7 @@ const matrix = {
   [ROLES.DATA_ENTRY]: {
     dashboard: V,
     settings: V,
+    notifications: V,
     ...grant(
       [
         "trips",

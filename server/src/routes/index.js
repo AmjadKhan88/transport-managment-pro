@@ -28,6 +28,8 @@ import backupRoutes from "./backupRoutes.js";
 import auditRoutes from "./auditRoutes.js";
 import systemRoutes from "./systemRoutes.js";
 
+import notificationRoutes from "./notificationRoutes.js";
+
 const router = Router();
 
 router.get("/health", (req, res) => {
@@ -69,5 +71,7 @@ router.use("/search", searchRoutes);
 router.use("/backups", backupRoutes);
 router.use("/audit", auditRoutes);
 router.use("/system", systemRoutes);
+
+router.use("/notifications", notificationRoutes);
 
 export default router;

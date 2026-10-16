@@ -28,6 +28,13 @@ const userSchema = new mongoose.Schema(
     failedLogins: { type: Number, default: 0 },
     lockUntil: Date,
     passwordChangedAt: Date, // sessions created before this are no longer valid
+    notificationsSeenAt: Date, // items newer than this are "new" in the bell
+    notificationPrefs: {
+      added: { type: Boolean, default: true }, // other people added something
+      changed: { type: Boolean, default: true }, // ... changed something
+      deleted: { type: Boolean, default: true }, // ... deleted something
+      alerts: { type: Boolean, default: true }, // reminders and alerts
+    },
   },
   {
     timestamps: true,

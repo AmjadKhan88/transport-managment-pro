@@ -3,9 +3,11 @@ import app from "./app.js";
 import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import { startBackupScheduler } from "./services/backup.js";
+import { startAlertScheduler } from "./services/alerts.js";
 
 const start = async () => {
   await connectDB();
+  startAlertScheduler();
   startBackupScheduler();
 
   const server = app.listen(env.port, () =>
