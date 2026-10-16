@@ -1,0 +1,25 @@
+export const AREA_LABELS = {
+  trips: "Trips",
+  vehicles: "Vehicles",
+  drivers: "Drivers",
+  customers: "Customers",
+  diesel: "Fuel",
+  repairs: "Repairs",
+  salaries: "Salaries",
+  employees: "Staff",
+  shop: "Shop",
+  "shop/stock": "Shop stock",
+  office: "Office",
+  income: "Income",
+  expenses: "Expenses",
+  investments: "Investments",
+  documents: "Documents",
+  users: "Users",
+  receivables: "Receivables",
+  "receivables/payments": "Customer payments",
+  "payables/pay": "Bill payments",
+  "payables/payments": "Payment reversals",
+  "salaries/generate": "Salary runs",
+};
+
+export const areaLabel = (resource) => AREA_LABELS[resource] ?? resource;

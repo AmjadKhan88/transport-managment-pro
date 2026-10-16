@@ -3,6 +3,7 @@ import { getPeriodOptions } from "@/utils/period";
 import ThemeToggle from "./ThemeToggle";
 import UserMenu from "./UserMenu";
 import GlobalSearch from "./GlobalSearch";
+import NotificationBell from "./NotificationBell";
 
 export default function Topbar({ onMenuClick }) {
 
@@ -65,17 +66,7 @@ export default function Topbar({ onMenuClick }) {
           <ThemeToggle />
 
           {/* Bell */}
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:border-emerald-300 hover:text-emerald-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-500/50 dark:hover:text-emerald-400"
-          >
-            <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8" />
-              <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-            </svg>
-            <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-800" />
-          </button>
+          <NotificationBell />
 
           {/* User (static until Auth step) */}
           <UserMenu />

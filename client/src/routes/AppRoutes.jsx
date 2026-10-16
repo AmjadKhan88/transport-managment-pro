@@ -28,6 +28,7 @@ import Payables from "@/pages/payables/Payables";
 import Documents from "@/pages/documents/Documents";
 import Settings from "@/pages/settings/Settings";
 import Backup from "@/pages/backup/Backup";
+import Notifications from "@/pages/notifications/Notifications";
 // Real pages get registered here as we build them. Everything else shows a placeholder.
 const pages = {
   "/users": <Users />,
@@ -49,6 +50,7 @@ const pages = {
   "/documents": <Documents />,
   "/settings": <Settings />,
   "/backup": <Backup />,
+  "/notifications": <Notifications />,
 };
 
 
