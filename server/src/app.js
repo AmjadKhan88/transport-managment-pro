@@ -12,6 +12,8 @@ import { rejectOperatorKeys } from "./middlewares/security.js";
 import { auditLogger } from "./middlewares/audit.js";
 import { ApiError } from "./utils/ApiError.js";
 import { activityNotifier } from "./services/activity.js";
+import whatsappWebhookRoutes from "./routes/whatsapp.webhook.routes.js";
+import automationRoutes from "./routes/automation.routes.js";
 
 const app = express();
 
@@ -28,7 +30,14 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json({ limit: "1mb" })); // file uploads use multer, not JSON
+app.use(
+  express.json({
+    verify: (req, _res, buf) => {
+      req.rawBody = buf;
+    },
+    limit: "1mb",
+  }),
+); // file uploads use multer, not JSON
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 app.use(compression());
@@ -60,6 +69,8 @@ app.use("/api", rejectOperatorKeys);
 app.use("/api", auditLogger);
 app.use("/api", activityNotifier);
 app.use("/api", routes);
+app.use("/api/whatsapp", whatsappWebhookRoutes);
+app.use("/api/automation", automationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

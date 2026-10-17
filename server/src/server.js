@@ -4,11 +4,13 @@ import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import { startBackupScheduler } from "./services/backup.js";
 import { startAlertScheduler } from "./services/alerts.js";
+import { startDailySummaryJob } from "./src/jobs/dailySummary.job.js";
 
 const start = async () => {
   await connectDB();
   startAlertScheduler();
   startBackupScheduler();
+  // startDailySummaryJob();
 
   const server = app.listen(env.port, () =>
     console.log(
